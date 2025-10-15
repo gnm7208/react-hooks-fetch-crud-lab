@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 function QuestionForm({ onAddQuestion }) {
   const [formData, setFormData] = useState({
@@ -9,6 +9,8 @@ function QuestionForm({ onAddQuestion }) {
     answer4: "",
     correctIndex: 0,
   });
+
+  const isMountedRef = useRef(true);
 
   function handleChange(event) {
     setFormData({
@@ -40,19 +42,27 @@ function QuestionForm({ onAddQuestion }) {
       .then((response) => response.json())
       .then((data) => {
         onAddQuestion(data);
-        setFormData({
-          prompt: "",
-          answer1: "",
-          answer2: "",
-          answer3: "",
-          answer4: "",
-          correctIndex: 0,
-        });
+        if (isMountedRef.current) {
+          setFormData({
+            prompt: "",
+            answer1: "",
+            answer2: "",
+            answer3: "",
+            answer4: "",
+            correctIndex: 0,
+          });
+        }
       })
       .catch((error) => {
         console.error("Error adding question:", error);
       });
   }
+
+  React.useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   return (
     <section>
