@@ -25,6 +25,9 @@
     "server": "json-server --watch db.json --port=4000"
   },
   "jest": {
+    "transform": {
+      "^.+\\.cjs$": "babel-jest"
+    },
     "transformIgnorePatterns": [
       "/node_modules/(?!(@testing-library|@adobe/css-tools)/)"
     ]
